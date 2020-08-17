@@ -108,7 +108,7 @@ tlu = Time Last Update
                 StatusSANSW = sansw_rt_info_to_show()
             else:
                 StatusSANSW = 0
-                
+
             if StatusHAAP:
                 StatusHAAP.sort(key=operator.itemgetter(0))
                 tlu_haap = s.time_now_to_show()

@@ -32,7 +32,7 @@ def haap_last_record():
     """
     @note: HAAP最后一次所有的数据
     """
-    return HAAP().query_last_record()
+    return HAAP().query_last_records()
 
 
 # SANSW
@@ -51,11 +51,11 @@ def switch_last_info():
 
 
 # Warning
-def insert_warning(time, ip, device, level,  warn_message, confirm):
+def insert_warning(time, ip, device, level, warn_message, confirm):
     """
     @note: warning数据插入
     """
-    Warning().insert(time, ip,  device, level,
+    Warning().insert(time, ip, device, level,
                      warn_message, confirm)
 
 
@@ -107,11 +107,12 @@ class HAAP(object):
         t = collHAAP(time=time, origin=origin, info=info)
         t.save()
 
-    def query_range(self, time_start, time_end):
-        collHAAP.objects(date__gte=time_start,
-                         date__lt=time_end).order_by('-date')
+#     获取引擎一段时间数据，暂未使用，后续可能使用
+#     def query_range(self, time_start, time_end):
+#         return collHAAP.objects(date__gte=time_start,
+#                          date__lt=time_end).order_by('-date')
 
-    def query_last_record(self):
+    def query_last_records(self):
         return collHAAP.objects().order_by('-time').first()
 
 
@@ -122,9 +123,10 @@ class SANSW(object):
                       sum_total=sum_total, ptes=ptes,)
         t.save()
 
-    def query_range(self, time_start, time_end):
-        collSANSW.objects(date__gte=time_start,
-                          date__lt=time_end).order_by('-date')
+#     获取SAN交换机一段时间数据，暂未使用，后续可能使用
+#     def query_range(self, time_start, time_end):
+#         return collSANSW.objects(date__gte=time_start,
+#                           date__lt=time_end).order_by('-date')
 
     def query_last_records(self):
         return collSANSW.objects().order_by('-time').first()
@@ -133,18 +135,16 @@ class SANSW(object):
 class Warning(object):
 
     def insert(self, time_now, lstip, device, lstdj, lstSTS, confirm):
-        t = collWarning(time=time_now, ip=lstip,  device=device, level=lstdj,
+        t = collWarning(time=time_now, ip=lstip, device=device, level=lstdj,
                         warn_message=lstSTS, confirm=confirm)
         t.save()
 
-    def query_range(self, time_start, time_end):
-        collWarning.objects(date__gte=time_start,
-                            date__lt=time_end).order_by('-date')
+#     获取Warning一段时间数据，暂未使用，后续可能使用
+#     def query_range(self, time_start, time_end):
+#         return collWarning.objects(date__gte=time_start,
+#                             date__lt=time_end).order_by('-date')
 
     def query_last_records(self):
-        return collWarning.objects().order_by('-time').first()
-
-    def update(self, intN):
         return collWarning.objects().order_by('-time').first()
 
     def get_all_unconfirm_warning(self):

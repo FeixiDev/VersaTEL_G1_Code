@@ -218,10 +218,10 @@ class SSHConn(object):
             output = _return(GetRusult())
             if output:
                 return output
-
-    def close(self):
-        if self.ssh_connect:
-            self.ssh_connect.close()
+# 暂未使用
+#     def close(self):
+#         if self.ssh_connect:
+#             self.ssh_connect.close()
 
 
 class HAAPConn(object):
@@ -231,7 +231,7 @@ class HAAPConn(object):
         self._port = intPort
         self._password = strPWD
         self._timeout = intTO
-        self._product = gc.General().get_PRODUCT()
+        self._product = ['CIO', 'HA-AP']
         self._strLoginPrompt = 'Enter password'
         self._strMainMenuPrompt = 'Coredump Menu'
         self._strCLIPrompt = 'CLI>'
@@ -307,9 +307,10 @@ class HAAPConn(object):
 
                 if CLI in strEnterOutput:
                     return get_result()
-                elif self._product.encode(encoding="utf-8") in strEnterOutput:
+                elif any(map(lambda x: x in strEnterOutput,self._product)):
                     self.Connection.write('7')
-                    str7Output = self.Connection.read_until(CLI, timeout=1)
+                    str7Output = self.Connection.read_until(
+                        CLI, timeout=1)
                     if CLI in str7Output:
                         return get_result()
                     elif CLI_Conflict in str7Output:
@@ -328,14 +329,13 @@ class HAAPConn(object):
         #         print('Please Check Telnet Connection to "{}" \n\n'.format(
         #             self._host))
 
-    def Close(self):
-        if self.Connection:
-            self.Connection.close()
-
-    connection = property(
-        get_connection_status, doc="Get HAAPConn instance's connection")
+#         暂未使用
+#     def close(self):
+#         if self.Connection:
+#             self.Connection.close()
 
 
 if __name__ == '__main__':
 
     pass
+

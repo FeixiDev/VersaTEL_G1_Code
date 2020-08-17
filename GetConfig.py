@@ -225,16 +225,5 @@ class Setting(object):
         return oddRegularTrace
 
 
-class General(object):
-    """docstring for General"""
-
-    def __init__(self):
-        self.cfg = read_config_file()
-
-    def get_PRODUCT(self):
-        return str(self.cfg.get('General', 'PRODUCT'))
-
-
 if __name__ == '__main__':
-    print(Setting().folder_collection())
     pass

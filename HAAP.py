@@ -46,14 +46,17 @@ def change_firmware(ip, fw_file):
 
 def get_trace_all(trace_level):
     folder = '%s/%s' % (strTraceFolder, s.time_now_folder())
-    if trace_level:
-        for ip in list_engines_IP:
-            Action(ip, telnet_port, passwd, FTP_port).get_trace(
-                folder, trace_level)
-    else:
-        for ip in list_engines_IP:
-            Action(ip, telnet_port, passwd, FTP_port).get_trace(
-                folder, trace_level_cfg)
+    try:
+        if trace_level:
+            for ip in list_engines_IP:
+                Action(ip, telnet_port, passwd, FTP_port).get_trace(
+                    folder, trace_level)
+        else:
+            for ip in list_engines_IP:
+                Action(ip, telnet_port, passwd, FTP_port).get_trace(
+                    folder, trace_level_cfg)
+    finally:
+        return folder
 
 
 def get_trace(ip, trace_level):
@@ -67,14 +70,6 @@ def get_trace(ip, trace_level):
                 folder, trace_level_cfg)
     finally:
         return folder
-
-
-def analyse_trace_all(trace_level):
-    s.TraceAnalyse(oddHAAPErrorDict, get_trace_all(trace_level))
-
-
-def analyse_trace(ip, trace_level):
-    s.TraceAnalyse(oddHAAPErrorDict, get_trace(ip, trace_level))
 
 
 def execute_multi_commands(ip, command_file):

@@ -162,6 +162,7 @@ class Action():
             time.sleep(0.5)
             print('Clear error count for sw "{}" completed...'.format(
                 self._host))
+            return True
         except:
             print('Clear error count for sw "{}" failed!!!'.format(self._host))
 
@@ -275,13 +276,6 @@ class Status(Action):
                 total += sum
             return lstSum, total
 
-    def sum_total_and_warning(self):
-        lstSumTotal = list(self.sum_and_total())
-        intTotal = lstSumTotal[1]
-        intWarningLevel = s.is_Warning(intTotal, tuplThresholdTotal)
-        lstSumTotalWarning = lstSumTotal.append(intWarningLevel)
-        return lstSumTotalWarning
-
     def print_porterror_formated(self):
         tuplDesc = ('Port', 'RX', 'RT', 'EncOut', 'DiscC3',
                     'LinkFail', 'LossSigle', 'LossSync')
@@ -306,6 +300,7 @@ class Status(Action):
         _print_description()
         _print_status_in_line(self._dicPartPortError)
 
+    # 保留该方法供后续使用，该方法返回对应端口的LinkFail错误数
     @s.deco_Exception
     def get_linkfail_by_port(self, intSWPort):
         if self._dicPartPortError:
@@ -314,6 +309,7 @@ class Status(Action):
             else:
                 return 'Please correct the port number...'
 
+    # 保留方法后续使用，该方法返回对应端口的EnCout错误数
     @s.deco_Exception
     def get_encout_by_port(self, intSWPort):
         if self._dicPartPortError:
@@ -322,6 +318,7 @@ class Status(Action):
             else:
                 print('Please correct the port number...')
 
+    # 保留方法后续使用，该方法返回对应端口的DiscC3错误数
     @s.deco_Exception
     def get_discC3_by_port(self, intSWPort):
         if self._dicPartPortError:
