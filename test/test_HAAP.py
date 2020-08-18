@@ -60,7 +60,7 @@ def test_change_firmware():
 
 @pytest.mark.gt
 def test_get_trace_all():
-    assert haap.get_trace_all(level) == None
+    assert haap.get_trace_all(level)
 
 
 @pytest.mark.gt

@@ -186,10 +186,3 @@ class TestSetting:
 
     def test_oddRegularTrace(self):
         assert self.s.oddRegularTrace()
-
-
-class TestGeneral:
-
-    def test_get_PRODUCT(self):
-        g = gc.General()
-        assert g.get_PRODUCT() == 'HA-AP'

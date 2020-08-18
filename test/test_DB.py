@@ -67,11 +67,11 @@ class TestHAAP:
     def test_insert(self):
         assert self.haap.insert(time, Origin, Info) == None
 
-    def test_query_range(self):
-        assert self.haap.query_range(time_ago, time) == None
+    # def test_query_range(self):
+    #     assert self.haap.query_range(time_ago, time) == None
 
-    def test_query_last_record(self):
-        assert self.haap.query_last_record()
+    def test_query_last_records(self):
+        assert self.haap.query_last_records()
 
 
 @pytest.mark.mnt
@@ -83,8 +83,8 @@ class TestSANSW:
     def test_insert(self):
         assert self.sw.insert(time, origin, total, dic) == None
 
-    def test_query_range(self):
-        assert self.sw.query_range(time_ago, time) == None
+    # def test_query_range(self):
+    #     assert self.sw.query_range(time_ago, time) == None
 
     def test_query_last_records(self):
         assert self.sw.query_last_records()
@@ -96,14 +96,11 @@ class TestWarning:
     def test_insert(self):
         assert DB.Warning().insert(timeshow, ip, device, level, warn, confirm) == None
 
-    def test_query_range(self):
-        assert DB.Warning().query_range(time_ago, time) == None
+    # def test_query_range(self):
+    #     assert DB.Warning().query_range(time_ago, time) == None
 
     def test_query_last_records(self):
         assert DB.Warning().query_last_records()
-
-    def test_update(self):
-        assert DB.Warning().update(1)
 
     def test_get_all_unconfirm_warning(self):
         assert DB.Warning().get_all_unconfirm_warning()

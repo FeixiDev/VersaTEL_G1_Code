@@ -95,7 +95,7 @@ class TestAction:
 
     def test_clear_all_port(self):
         sys.stdout = io.BytesIO()
-        assert self.act.clear_all_port() == None
+        assert self.act.clear_all_port() == True
         assert 'completed' in sys.stdout.getvalue()
 
     def test_clear_one_port(self):
