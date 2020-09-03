@@ -34,6 +34,10 @@ def test_backup_config():
 
 @pytest.mark.fw
 def test_change_firmware():
+    pwd = os.getcwd()
+    ls = os.listdir(pwd)
+    if 'FW_15.9.8.2_OR.bin' and 'FW_15.9.8.4_OR.bin' not in ls:
+        return
     status = haap.Status(ip, t_port, passwd, ftp_port)
     fw_version = status.get_version()
     if fw_version == None:

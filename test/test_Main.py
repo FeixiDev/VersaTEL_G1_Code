@@ -255,21 +255,26 @@ def test_fw():
     status = haap.Status(engineip, t_port, passwd, ftp_port)
     fw_version = status.get_version()
     assert fw_version != None
-    if fw_version == 'V15.9.8.4':
-        output('fw %s FW_15.9.8.2_OR.bin' % engineip)
-    else:
-        output('fw %s FW_15.9.8.4_OR.bin' % engineip)
-    time.sleep(60)
-    try:
-        status = haap.Status(engineip, t_port, passwd, ftp_port)
-        fw_version_new = status.get_version()
-    except:
-        fw_version_new = None
-    if fw_version_new:
+    pwd = os.getcwd()
+    ls = os.listdir(pwd)
+    if 'FW_15.9.8.2_OR.bin' and 'FW_15.9.8.4_OR.bin' in ls:
         if fw_version == 'V15.9.8.4':
-            assert fw_version_new == 'V15.9.8.2'
+            output('fw %s FW_15.9.8.2_OR.bin' % engineip)
         else:
-            assert fw_version_new == 'V15.9.8.4'
+            output('fw %s FW_15.9.8.4_OR.bin' % engineip)
+        time.sleep(60)
+        try:
+            status = haap.Status(engineip, t_port, passwd, ftp_port)
+            fw_version_new = status.get_version()
+        except:
+            fw_version_new = None
+        if fw_version_new:
+            if fw_version == 'V15.9.8.4':
+                assert fw_version_new == 'V15.9.8.2'
+            else:
+                assert fw_version_new == 'V15.9.8.4'
+    else:
+        pass
 
 
 @pytest.mark.sts
