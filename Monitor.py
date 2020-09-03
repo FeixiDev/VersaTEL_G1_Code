@@ -93,6 +93,7 @@ tlu = Time Last Update
     '''
 
     app = Flask(__name__)
+    email = se.Email()
 
     @app.route("/", methods=['GET', 'POST'])
     def home():
@@ -176,7 +177,7 @@ tlu = Time Last Update
     def send_emails():
         if request.args.get('ey'):
             ey = request.args.get('ey')
-            se.send_test()
+            email.send_test_mail()
             meg = "success"
             return meg
         else:
@@ -224,7 +225,8 @@ def warning_interval_check(intInterval):
 
 def Monitoring_heart_check(cycle_msg_args):
     t = s.Timing()
-    t.add_cycle(se.send_live, cycle_msg_args)
+    email = se.Email()
+    t.add_cycle(email.send_alive_mail, cycle_msg_args)
     t.stt()
 
 
@@ -259,9 +261,10 @@ def check_all_sansw():
 
 
 def warning_check():
+    email = se.Email()
     unconfirm_warning = db.get_unconfirm_warning()
     if unconfirm_warning:
-        se.send_warnmail(unconfirm_warning)
+        email.send_warning_mail(unconfirm_warning)
     else:
         print('No unconfirm warning found...')
 
@@ -272,12 +275,14 @@ class haap_judge(object):
     """docstring for haap_judge"""
 
     def __init__(self, statusRT, statusDB, haap_Alias):
+        self.email = se.Email()
         self.alias = haap_Alias
         self.host = statusRT[0]
         self.statusRT = statusRT
         self.statusDB = statusDB
         self.strTimeNow = s.time_now_to_show()
         self.lstWarningToSend = []
+
 
     def judge_AH(self, AHstatus_rt, AHstatus_db):
         str_engine_AH = 'Engine AH'
@@ -341,10 +346,11 @@ class haap_judge(object):
                 self.judge_Mirror(self.statusRT[4], self.statusDB[4])
 
         if self.lstWarningToSend:
-            se.send_warnmail(self.lstWarningToSend)
+            self.email.send_warning_mail(self.lstWarningToSend)
 
 
 def sansw_judge(total_RT, total_DB, sansw_IP, sansw_Alias):
+    email = se.Email()
     strTimeNow = s.time_now_to_show()
     if (total_DB != None) and (total_RT != None):
         intErrorIncrease = total_RT - total_DB
@@ -353,7 +359,7 @@ def sansw_judge(total_RT, total_DB, sansw_IP, sansw_Alias):
             msg = warning_message_sansw(intWarninglevel)
             db.insert_warning(strTimeNow, sansw_IP, 'switch',
                               intWarninglevel, msg, 0)
-            se.send_warnmail([[strTimeNow, sansw_IP,
+            email.send_warning_mail([[strTimeNow, sansw_IP,
                                sansw_Alias, intWarninglevel, msg]])
 
 
