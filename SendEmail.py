@@ -7,17 +7,6 @@ try:
     import configparser as cp
 except Exception:
     import ConfigParser as cp
-from timeout import timeout
-from func_timeout import func_set_timeout
-import func_timeout
-
-# def timeout(func):
-#     def wrap(self, *args):
-#         if self._enable == 'yes':
-#             return func(self, *args)
-#         else:
-#             print("Timeout")
-#     return wrap
 
 
 class Email():
@@ -33,7 +22,7 @@ class Email():
         self._receiver_list = self._receiver.split(',')
         self._encrypt = cfg.email_encrypt()
         self._anonymous = cfg.email_anonymous()
-        self.timeout = 2
+        self._timeout = 5
 
     def _package_msg(self, title, content):
         msg = MIMEMultipart()
@@ -55,10 +44,10 @@ class Email():
     def _connect_login(self):
         try:
             if self._encrypt == 'ssl':
-                send_smtp = smtplib.SMTP_SSL(self._host, self._port)
+                send_smtp = smtplib.SMTP_SSL(self._host, self._port, timeout=self._timeout)
                 send_smtp.connect(self._host)
             else:
-                send_smtp = smtplib.SMTP()
+                send_smtp = smtplib.SMTP(timeout=self._timeout)
                 if self._encrypt == 'tls':
                     send_smtp.connect(self._host, self._port)
                     send_smtp.ehlo()
@@ -79,15 +68,14 @@ class Email():
     def _connect_login_anonymous(self):
         try:
             if self._encrypt == 'ssl':
-                send_smtp = smtplib.SMTP_SSL(self._host, self._port)
+                send_smtp = smtplib.SMTP_SSL(self._host, self._port, timeout=self._timeout)
             else:
-                send_smtp = smtplib.SMTP(self._host, self._port)
+                send_smtp = smtplib.SMTP(self._host, self._port, timeout=self._timeout)
             return send_smtp
         except:
             print("The Host unable to connect!")
             return False
 
-    @func_set_timeout(5)
     def _send_mail(self, title, content):
         if self._anonymous == 'yes':
             send_smtp = self._connect_login_anonymous()
@@ -98,6 +86,7 @@ class Email():
                 msg = self._package_msg(title, content)
                 send_smtp.sendmail(
                     self._sender, self._receiver_list, msg.as_string())
+
             except:
                 print("Send Fail, Please check 'receiver'.")
                 return
@@ -149,35 +138,26 @@ class Email():
                 </body>
                 </html> """
         title = "ClusterIO System Status Alert"
-        try:
-            self._send_mail(title, content)
-        except func_timeout.exceptions.FunctionTimedOut:
-            print('Timeout: Task of send warning mail timeout')
+        self._send_mail(title, content)
 
     @email_switch
     def send_alive_mail(self):
         title = "HA-AP Timing alarm clock"
         content = "I'm still alive"
-        try:
-            self._send_mail(title, content)
-        except func_timeout.exceptions.FunctionTimedOut:
-            print('Timeout: Task of send alive mail timeout')
+        self._send_mail(title, content)
 
 
     @email_switch
     def send_test_mail(self):
         title = "This is a HA-AP test email"
         content = "Test"
-        try:
-            self._send_mail(title, content)
-        except func_timeout.exceptions.FunctionTimedOut:
-            print('Timeout: Task of send test mail timeout')
+        self._send_mail(title, content)
 
 
 if __name__ == '__main__':
     email = Email()
     email.send_test_mail()
-    # email.send_alive_mail()
-    # email.send_warning_mail([['2020-04-29 16:36:42', '10.203.1.4', 'engine0', 2, 'Engine reboot 6674 secends ago']])
+    email.send_alive_mail()
+    email.send_warning_mail([['2020-04-29 16:36:42', '10.203.1.4', 'engine0', 2, 'Engine reboot 6674 secends ago']])
     # a = [['2020-04-29 16:36:42', '10.203.1.4', 'engine0', 2, 'Engine reboot 6674 secends ago']]
     # send_warnmail(a)
