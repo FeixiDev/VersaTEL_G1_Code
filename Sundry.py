@@ -182,7 +182,7 @@ class Timing(object):
 
     def add_interval(self, job, intSec):
         trigger = IntervalTrigger(seconds=intSec)
-        self.scdl.add_job(job, trigger)
+        self.scdl.add_job(job, trigger,max_instances=20)
 
     def add_cycle(self, job, args):
         cycle = args[0]
